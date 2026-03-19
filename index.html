@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jeorge Martins-Voralek — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f; --surface: #111118; --card: #16161f; --border: #2a2a3a;
+      --accent: #00e5ff; --accent2: #7b5ea7; --text: #e8e8f0; --muted: #7a7a9a;
+      --font-head: 'Syne', sans-serif; --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-mono); min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: var(--font-head); font-weight: 800; font-size: 1.1rem; color: var(--accent); letter-spacing: 0.05em; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+    .hero { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 48px 80px; overflow: hidden; }
+    .hero-tag { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 24px; animation: fadeUp 0.6s ease both; }
+    .hero h1 { font-family: var(--font-head); font-size: clamp(3rem, 8vw, 7rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.02em; animation: fadeUp 0.7s 0.1s ease both; }
+    .hero h1 .accent { color: var(--accent); }
+    .hero-sub { margin-top: 32px; font-size: 0.95rem; color: var(--muted); max-width: 480px; line-height: 1.7; animation: fadeUp 0.7s 0.2s ease both; }
+    .hero-sub span { color: var(--text); }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; animation: fadeUp 0.7s 0.3s ease both; }
+    .badge { padding: 6px 14px; border: 1px solid var(--border); border-radius: 2px; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
+    .badge.highlight { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.05); }
+    .hero-scroll { position: absolute; bottom: 40px; left: 48px; display: flex; align-items: center; gap: 12px; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; animation: fadeUp 0.7s 0.5s ease both; }
+    .scroll-line { width: 40px; height: 1px; background: var(--accent); }
+    .hero-deco { position: absolute; right: -80px; top: 50%; transform: translateY(-50%); width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(123,94,167,0.15) 0%, transparent 70%); pointer-events: none; animation: pulse 4s ease-in-out infinite; }
+    section { position: relative; z-index: 1; padding: 100px 48px; }
+    .section-label { font-size: 0.7rem; color: var(--accent); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px; }
+    .section-title { font-family: var(--font-head); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin-bottom: 60px; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+    .big-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color 0.3s, transform 0.3s; cursor: pointer; }
+    .big-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .card-header { padding: 32px 32px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .card-icon { width: 48px; height: 48px; border: 1px solid var(--accent); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; background: rgba(0,229,255,0.05); }
+    .card-title { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+    .card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+    .card-body { padding: 28px 32px; }
+    .cv-section { margin-bottom: 28px; }
+    .cv-section-title { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .cv-item { display: flex; gap: 16px; margin-bottom: 16px; }
+    .cv-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex-shrink: 0; }
+    .cv-item-title { font-size: 0.88rem; font-weight: 400; color: var(--text); margin-bottom: 2px; }
+    .cv-item-sub { font-size: 0.75rem; color: var(--muted); }
+    .cv-item-date { font-size: 0.68rem; color: var(--accent2); margin-top: 2px; }
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-pill { padding: 4px 10px; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.2); border-radius: 2px; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.06em; }
+    .veille-item { padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .veille-item:last-child { border-bottom: none; }
+    .veille-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .veille-cat { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent2); border: 1px solid var(--accent2); padding: 2px 8px; border-radius: 2px; }
+    .veille-date { font-size: 0.68rem; color: var(--muted); }
+    .veille-title { font-family: var(--font-head); font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .veille-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.6; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,10,0.92); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.25s ease; }
+    .modal { background: var(--card); border: 1px solid var(--accent); border-radius: 4px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; animation: scaleIn 0.25s ease; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 32px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--card); z-index: 10; }
+    .modal-header h2 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; }
+    .modal-close { width: 36px; height: 36px; border: 1px solid var(--border); background: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; border-radius: 2px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+    .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+    .modal-body { padding: 32px; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .about-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 28px; }
+    .about-card h3 { font-family: var(--font-head); font-size: 1rem; margin-bottom: 12px; color: var(--accent); }
+    .about-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; color: var(--muted); }
+    footer .foot-name { font-family: var(--font-head); font-weight: 700; color: var(--accent); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0 48px; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes pulse { 0%, 100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-50%) scale(1.08); } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; } .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; } section { padding: 70px 24px; }
+      .about-grid { grid-template-columns: 1fr; }
+      footer { padding: 28px 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .divider { margin: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo">JMV</div>
+    <ul class="nav-links">
+      <li><a href="#accueil">Accueil</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" id="accueil">
+    <div class="hero-deco"></div>
+    <p class="hero-tag">// Portfolio — BTS SIO SISR</p>
+    <h1>Jeorge<br><span class="accent">Martins-</span><br>Voralek</h1>
+    <p class="hero-sub">Étudiant en <span>BTS SIO option SISR — 2ème année</span><br>Lycée Robert Schuman — Dugny &nbsp;·&nbsp; Villiers-le-Bel</p>
+    <div class="hero-badges">
+      <span class="badge highlight">SISR</span>
+      <span class="badge">Réseaux & Infrastructure</span>
+      <span class="badge">Cybersécurité</span>
+      <span class="badge">Administration Système</span>
+    </div>
+    <div class="hero-scroll"><div class="scroll-line"></div>Scroll pour explorer</div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- CV SECTION -->
+  <section id="cv">
+    <p class="section-label reveal">// 01 — curriculum vitae</p>
+    <h2 class="section-title reveal">Mon Parcours</h2>
+    <div class="about-grid">
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div class="about-card reveal">
+          <h3>🎓 Formation</h3>
+          <div class="cv-item" style="margin-top:12px;"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">BTS SIO — option SISR</div>
+            <div class="cv-item-sub">Lycée Professionnel Robert Schuman</div>
+            <div class="cv-item-date">2023 — 2025 (en cours)</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Baccalauréat Professionnel</div>
+            <div class="cv-item-sub">Lycée Professionnel Robert Schuman</div>
+            <div class="cv-item-date">2020 — 2023</div>
+          </div></div>
+        </div>
+        <div class="about-card reveal">
+          <h3>🌍 Langues</h3>
+          <div class="cv-item" style="margin-top:12px;"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Français</div><div class="cv-item-sub">Langue maternelle</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Anglais</div><div class="cv-item-sub">Niveau scolaire — technique</div>
+          </div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div class="about-card reveal">
+          <h3>💼 Expériences / Stages</h3>
+          <div class="cv-item" style="margin-top:12px;"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Stage — Administration réseau</div>
+            <div class="cv-item-sub">Entreprise à compléter</div>
+            <div class="cv-item-date">À compléter</div>
+          </div></div>
+          <div style="margin-top:8px;padding:10px;background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.12);border-radius:2px;font-size:0.73rem;color:var(--muted);">
+            ✏️ <em>Complète avec tes vraies expériences de stage.</em>
+          </div>
+        </div>
+        <div class="about-card reveal">
+          <h3>📋 Veille Technologique</h3>
+          <div class="veille-item" style="padding:10px 0;">
+            <div class="veille-top"><span class="veille-cat">🌿 Green IT</span><span class="veille-date">2024—2025</span></div>
+            <div class="veille-title" style="font-size:0.85rem;">Le Green IT : vers des infrastructures réseau plus durables</div>
+          </div>
+          <div style="margin-top:4px;font-size:0.68rem;color:var(--accent);">📰 Outil : Feedly</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- COMPÉTENCES SECTION -->
+  <section id="competences">
+    <p class="section-label reveal">// 02 — compétences</p>
+    <h2 class="section-title reveal">Mes Compétences</h2>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <h3>🖥️ Systèmes & Serveurs</h3>
+        <div class="skills-grid" style="margin-top:14px;">
+          <span class="skill-pill">Windows Server 2019/2022</span>
+          <span class="skill-pill">Linux Debian/Ubuntu</span>
+          <span class="skill-pill">Active Directory</span>
+          <span class="skill-pill">Hyper-V</span>
+          <span class="skill-pill">VMware</span>
+          <span class="skill-pill">VirtualBox</span>
+        </div>
+      </div>
+      <div class="about-card reveal">
+        <h3>🌐 Réseaux</h3>
+        <div class="skills-grid" style="margin-top:14px;">
+          <span class="skill-pill">Cisco IOS</span>
+          <span class="skill-pill">VLAN / VTP</span>
+          <span class="skill-pill">OSPF / RIP</span>
+          <span class="skill-pill">TCP/IP</span>
+          <span class="skill-pill">DNS / DHCP</span>
+          <span class="skill-pill">pfSense</span>
+          <span class="skill-pill">NAT / PAT</span>
+        </div>
+      </div>
+      <div class="about-card reveal">
+        <h3>🔒 Sécurité & Outils</h3>
+        <div class="skills-grid" style="margin-top:14px;">
+          <span class="skill-pill">Wireshark</span>
+          <span class="skill-pill">Firewall</span>
+          <span class="skill-pill">VPN</span>
+          <span class="skill-pill">GLPI</span>
+          <span class="skill-pill">Packet Tracer</span>
+          <span class="skill-pill">Nmap</span>
+        </div>
+      </div>
+      <div class="about-card reveal">
+        <h3>💻 Scripts & Développement</h3>
+        <div class="skills-grid" style="margin-top:14px;">
+          <span class="skill-pill">PowerShell</span>
+          <span class="skill-pill">Bash</span>
+          <span class="skill-pill">HTML / CSS</span>
+          <span class="skill-pill">Python (bases)</span>
+          <span class="skill-pill">SQL (bases)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barres de niveau -->
+    <div style="margin-top:40px;" class="reveal">
+      <div class="cv-section-title" style="margin-bottom:24px;">Niveau général</div>
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:700px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.75rem;"><span>Administration Système</span><span style="color:var(--accent);">80%</span></div>
+          <div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:80%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width 1s;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.75rem;"><span>Réseaux & Infrastructure</span><span style="color:var(--accent);">75%</span></div>
+          <div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:75%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.75rem;"><span>Cybersécurité</span><span style="color:var(--accent);">60%</span></div>
+          <div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:60%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.75rem;"><span>Scripting / Automatisation</span><span style="color:var(--accent);">55%</span></div>
+          <div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:55%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- PROJETS SECTION -->
+  <section id="projets">
+    <p class="section-label reveal">// 03 — projets & veille</p>
+    <h2 class="section-title reveal">Projets & Veille</h2>
+    <div class="cards-grid">
+
+      <!-- CARD CV/PROJETS -->
+      <div class="big-card reveal" onclick="openModal('cv')">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Curriculum Vitae</div>
+            <div class="card-desc">Mon parcours complet, formations et expériences</div>
+          </div>
+          <div class="card-icon">📄</div>
+        </div>
+        <div class="card-body">
+          <div class="cv-section">
+            <div class="cv-section-title">Formation</div>
+            <div class="cv-item"><div class="cv-dot"></div><div><div class="cv-item-title">BTS SIO option SISR</div><div class="cv-item-sub">Lycée Robert Schuman — 2024/2026</div></div></div>
+            <div class="cv-item"><div class="cv-dot"></div><div><div class="cv-item-title">Bac Pro Système Numérique (Mention AB)</div><div class="cv-item-sub">Lycée Robert Schuman — 2021/2024</div></div></div>
+          </div>
+          <div style="margin-top:20px;font-size:0.72rem;color:var(--accent);letter-spacing:0.1em;">→ Cliquer pour voir le CV complet</div>
+        </div>
+      </div>
+
+      <!-- CARD VEILLE -->
+      <div class="big-card reveal" onclick="openModal('veille')">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Veille Technologique</div>
+            <div class="card-desc">Suivi des actualités IT & cybersécurité</div>
+          </div>
+          <div class="card-icon">📡</div>
+        </div>
+        <div class="card-body">
+          <div class="veille-item">
+            <div class="veille-top"><span class="veille-cat">🌿 Green IT</span><span class="veille-date">2024 — 2025</span></div>
+            <div class="veille-title">Le Green IT : vers des infrastructures réseau plus durables</div>
+            <div class="veille-desc">Enjeux environnementaux du numérique, solutions réseau éco-responsables et rôle du technicien SISR...</div>
+          </div>
+          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;">
+            <div style="padding:3px 10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:2px;font-size:0.68rem;color:var(--accent);">📰 Outil : Feedly</div>
+          </div>
+          <div style="margin-top:20px;font-size:0.72rem;color:var(--accent);letter-spacing:0.1em;">→ Cliquer pour voir toute la veille</div>
+        </div>
+      </div>
+
+      <!-- CARD PROJET HSP -->
+      <div class="big-card reveal" onclick="openModal('hsp')" style="grid-column: span 2;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">HSP : SRV-CTX5 — Hôpital Sud Paris</div>
+            <div class="card-desc">Infrastructure réseau hospitalière complète avec supervision et solutions collaboratives · Chef de projet : Jeorge</div>
+          </div>
+          <div class="card-icon">🏥</div>
+        </div>
+        <div class="card-body">
+          <div class="skills-grid" style="margin-bottom:16px;">
+            <span class="skill-pill">VLAN</span><span class="skill-pill">pfSense</span><span class="skill-pill">Snort</span><span class="skill-pill">GLPI</span><span class="skill-pill">Zabbix</span><span class="skill-pill">Active Directory</span><span class="skill-pill">DNS/DHCP</span><span class="skill-pill">Switch Cisco</span><span class="skill-pill">Veeam</span><span class="skill-pill">LDAP</span>
+          </div>
+          <div style="display:flex;gap:24px;flex-wrap:wrap;">
+            <div style="font-size:0.78rem;color:var(--muted);">🏫 <span style="color:var(--text);">Lycée Robert Schuman</span></div>
+            <div style="font-size:0.78rem;color:var(--muted);">👥 <span style="color:var(--text);">Trinôme : Jeorge, Mathias, Ronaldo</span></div>
+            <div style="font-size:0.78rem;color:var(--muted);">📅 <span style="color:var(--text);">2025/2026</span></div>
+          </div>
+          <div style="margin-top:16px;font-size:0.72rem;color:var(--accent);letter-spacing:0.1em;">→ Cliquer pour voir la documentation complète</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact">
+    <p class="section-label reveal">// 04 — contact</p>
+    <h2 class="section-title reveal">Me Contacter</h2>
+    <div class="about-grid">
+      <div class="about-card reveal" style="grid-column: span 1;">
+        <h3>📬 Coordonnées</h3>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px;font-size:0.82rem;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="color:var(--accent);font-size:1rem;">👤</span>
+            <span><span style="color:var(--muted);">Nom :</span> <span style="color:var(--text);">Jeorge Martins-Voralek</span></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="color:var(--accent);font-size:1rem;">🎓</span>
+            <span><span style="color:var(--muted);">Formation :</span> <span style="color:var(--text);">BTS SIO SISR — 2ème année</span></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="color:var(--accent);font-size:1rem;">🏫</span>
+            <span><span style="color:var(--muted);">Lycée :</span> <span style="color:var(--text);">LP Robert Schuman</span></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="color:var(--accent);font-size:1rem;">📧</span>
+            <span><span style="color:var(--muted);">Email :</span> <a href="mailto:jeorgemartins0@gmail.com" style="color:var(--accent);text-decoration:none;">jeorgemartins0@gmail.com</a></span>
+          </div>
+          <!-- Coordonnées privées -->
+          <div id="contact-private" style="display:none;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="color:var(--accent);font-size:1rem;">📞</span>
+              <span><span style="color:var(--muted);">Téléphone :</span> <span style="color:var(--text);">07 71 12 41 03</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="color:var(--accent);font-size:1rem;">📍</span>
+              <span><span style="color:var(--muted);">Adresse :</span> <span style="color:var(--text);">1 Place du gros Caillou, 95400 Villiers-le-Bel</span></span>
+            </div>
+          </div>
+          <button onclick="var d=document.getElementById('contact-private');d.style.display=d.style.display==='flex'?'none':'flex';this.textContent=d.style.display==='flex'?'🔓 Masquer les infos privées':'🔒 Afficher téléphone & adresse';" style="padding:8px 16px;background:rgba(123,94,167,0.12);border:1px solid var(--accent2);border-radius:2px;color:var(--accent2);font-family:var(--font-mono);font-size:0.72rem;cursor:pointer;letter-spacing:0.08em;text-align:left;">🔒 Afficher téléphone &amp; adresse</button>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="color:var(--accent);font-size:1rem;">🚗</span>
+            <span><span style="color:var(--muted);">Permis :</span> <span style="color:var(--text);">Permis B</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-card reveal">
+        <h3>✉️ Envoyer un message</h3>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <label style="font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:6px;">Nom</label>
+            <input type="text" placeholder="Votre nom" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 14px;color:var(--text);font-family:var(--font-mono);font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+          </div>
+          <div>
+            <label style="font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:6px;">Email</label>
+            <input type="email" placeholder="votre@email.com" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 14px;color:var(--text);font-family:var(--font-mono);font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+          </div>
+          <div>
+            <label style="font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:6px;">Message</label>
+            <textarea rows="4" placeholder="Votre message..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 14px;color:var(--text);font-family:var(--font-mono);font-size:0.8rem;outline:none;resize:vertical;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+          </div>
+          <button onclick="sendMsg()" style="padding:12px 24px;background:var(--accent);color:#0a0a0f;font-family:var(--font-mono);font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Envoyer →</button>
+          <p id="form-msg" style="font-size:0.75rem;color:var(--accent);display:none;">✅ Message envoyé ! (Connecte un vrai service email comme Formspree pour recevoir les messages)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="foot-name">Jeorge Martins-Voralek</span>
+    <span>© 2025 — BTS SIO SISR · LP Robert Schuman</span>
+    <span style="color:var(--accent);">Portfolio</span>
+  </footer>
+
+  <!-- MODAL HSP -->
+  <div class="modal-overlay" id="modal-hsp">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>🏥 HSP : SRV-CTX5 — Hôpital Sud Paris</h2>
+        <button class="modal-close" onclick="closeModal('hsp')">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- En-tête projet -->
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px;padding:18px;background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.15);border-radius:3px;">
+          <div style="font-size:0.75rem;color:var(--muted);">📋 <span style="color:var(--text);">Projet informatique réseau et supervision hospitalière</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);">🏥 <span style="color:var(--text);">Hôpital Sud Paris</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);">👑 <span style="color:var(--text);">Chef de projet : Jeorge</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);">👥 <span style="color:var(--text);">Trinôme : Jeorge, Mathias, Ronaldo</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);">📅 <span style="color:var(--text);">BTS SIO SISR2 — 2025/2026</span></div>
+        </div>
+
+        <!-- Skills -->
+        <div class="skills-grid" style="margin-bottom:24px;">
+          <span class="skill-pill">VLAN</span><span class="skill-pill">pfSense</span><span class="skill-pill">Snort IDS</span><span class="skill-pill">GLPI</span><span class="skill-pill">Zabbix</span><span class="skill-pill">Active Directory</span><span class="skill-pill">DNS/DHCP</span><span class="skill-pill">Switch Cisco 2950/3750</span><span class="skill-pill">Veeam Backup</span><span class="skill-pill">LDAP</span><span class="skill-pill">SquidProxy</span><span class="skill-pill">SquidGuard</span>
+        </div>
+
+        <!-- Architecture réseau -->
+        <div class="cv-section">
+          <div class="cv-section-title">Architecture réseau — VLANs</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.75rem;">
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 10</span> — SERVEURS (172.16.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 11</span> — VISIO (10.11.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 12</span> — LABO (10.12.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 13</span> — OPHTALMO (10.13.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 14</span> — ADMINISTRATIF (10.14.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 15</span> — ANGIO (10.15.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 16</span> — PRATICIEN (10.16.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 17</span> — PATIENT (10.17.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 18</span> — VISITEUR (10.18.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 51</span> — DMZ (172.17.0.0/16)</div>
+            <div style="padding:8px 12px;background:rgba(0,229,255,0.05);border:1px solid var(--border);border-radius:2px;"><span style="color:var(--accent);">VLAN 100</span> — WAN</div>
+          </div>
+        </div>
+
+        <!-- Serveurs — protégés par mot de passe -->
+        <div class="cv-section">
+          <div class="cv-section-title">Liste des serveurs</div>
+
+          <!-- Verrou -->
+          <div id="hsp-lock" style="padding:20px;background:rgba(123,94,167,0.08);border:1px solid var(--accent2);border-radius:3px;text-align:center;">
+            <div style="font-size:1.4rem;margin-bottom:8px;">🔒</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:16px;">Les identifiants et mots de passe sont protégés.<br/>Entrez le code d'accès pour les afficher.</div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              <input id="hsp-pwd-input" type="password" placeholder="Code d'accès..." style="padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:var(--font-mono);font-size:0.8rem;outline:none;width:180px;" onkeydown="if(event.key==='Enter')unlockHSP()"/>
+              <button onclick="unlockHSP()" style="padding:8px 20px;background:var(--accent2);color:#fff;font-family:var(--font-mono);font-size:0.75rem;border:none;border-radius:2px;cursor:pointer;letter-spacing:0.08em;">Déverrouiller</button>
+            </div>
+            <div id="hsp-pwd-err" style="font-size:0.72rem;color:#ff4d4d;margin-top:10px;display:none;">❌ Code incorrect</div>
+          </div>
+
+          <!-- Tableau serveurs — caché par défaut -->
+          <div id="hsp-servers" style="display:none;margin-top:12px;overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.74rem;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--accent);color:var(--accent);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;">
+                  <th style="padding:8px 10px;text-align:left;">Serveur</th>
+                  <th style="padding:8px 10px;text-align:left;">IP</th>
+                  <th style="padding:8px 10px;text-align:left;">VLAN</th>
+                  <th style="padding:8px 10px;text-align:left;">Utilisateur</th>
+                  <th style="padding:8px 10px;text-align:left;">Mot de passe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 10px;color:var(--text);">GLPI</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.16.0.100</td>
+                  <td style="padding:8px 10px;color:var(--muted);">SERVEURS (10)</td>
+                  <td style="padding:8px 10px;">Admin</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Aa123456789</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
+                  <td style="padding:8px 10px;color:var(--text);">Proxy pfSense</td>
+                  <td style="padding:8px 10px;color:var(--accent);">192.168.105.7</td>
+                  <td style="padding:8px 10px;color:var(--muted);">SERVEURS (10)</td>
+                  <td style="padding:8px 10px;">Admin</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">pfsense</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 10px;color:var(--text);">Zabbix</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.16.0.102</td>
+                  <td style="padding:8px 10px;color:var(--muted);">SERVEURS (10)</td>
+                  <td style="padding:8px 10px;">Zabbix admin</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Aa123456789</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
+                  <td style="padding:8px 10px;color:var(--text);">AD/DNS/DHCP (primaire)</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.16.0.103</td>
+                  <td style="padding:8px 10px;color:var(--muted);">SERVEURS (10)</td>
+                  <td style="padding:8px 10px;">Admin</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Azerty77</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 10px;color:var(--text);">Veeam Backup</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.16.0.110</td>
+                  <td style="padding:8px 10px;color:var(--muted);">SERVEURS (10)</td>
+                  <td style="padding:8px 10px;">Admin</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Aa123456789</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
+                  <td style="padding:8px 10px;color:var(--text);">AD Secondaire / PRTG</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.16.0.104</td>
+                  <td style="padding:8px 10px;color:var(--muted);">SERVEURS (10)</td>
+                  <td style="padding:8px 10px;">Admin</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Aa123456789</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:8px 10px;color:var(--text);">WEB MySQL</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.17.0.100</td>
+                  <td style="padding:8px 10px;color:var(--muted);">DMZ (51)</td>
+                  <td style="padding:8px 10px;">webserver</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Aa123456789</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
+                  <td style="padding:8px 10px;color:var(--text);">MESSAGERIE</td>
+                  <td style="padding:8px 10px;color:var(--accent);">172.17.0.101</td>
+                  <td style="padding:8px 10px;color:var(--muted);">DMZ (51)</td>
+                  <td style="padding:8px 10px;">Exchange</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">Aa123456789</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 10px;color:var(--text);">Kali Linux</td>
+                  <td style="padding:8px 10px;color:var(--accent);">10.14.0.3</td>
+                  <td style="padding:8px 10px;color:var(--muted);">ADMINISTRATIF (14)</td>
+                  <td style="padding:8px 10px;">Kali</td>
+                  <td style="padding:8px 10px;font-family:var(--font-mono);">K@l123456789</td>
+                </tr>
+              </tbody>
+            </table>
+            <button onclick="document.getElementById('hsp-servers').style.display='none';document.getElementById('hsp-lock').style.display='block';" style="margin-top:12px;padding:6px 14px;background:none;border:1px solid var(--border);border-radius:2px;color:var(--muted);font-family:var(--font-mono);font-size:0.7rem;cursor:pointer;">🔒 Reverrouiller</button>
+          </div>
+        </div>
+
+        <!-- Switches -->
+        <div class="cv-section">
+          <div class="cv-section-title">Équipements réseau</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="padding:14px;background:rgba(0,229,255,0.03);border:1px solid var(--border);border-radius:3px;">
+              <div style="font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;margin-bottom:6px;">SWITCH CISCO 2950</div>
+              <p style="font-size:0.75rem;color:var(--muted);line-height:1.6;">24 ports FastEthernet · VLANs 11–18 actifs · Connecté aux équipements de service (VISIO, LABO, OPHTALMO, etc.)</p>
+            </div>
+            <div style="padding:14px;background:rgba(0,229,255,0.03);border:1px solid var(--border);border-radius:3px;">
+              <div style="font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;margin-bottom:6px;">SWITCH CISCO 3750 (cœur)</div>
+              <p style="font-size:0.75rem;color:var(--muted);line-height:1.6;">Switch L3 multicouche · Routage InterVLAN · Interfaces GigaEthernet · Gestion des VLANs serveurs et DMZ</p>
+            </div>
+            <div style="padding:14px;background:rgba(0,229,255,0.03);border:1px solid var(--border);border-radius:3px;">
+              <div style="font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;margin-bottom:6px;">POINT D'ACCÈS WI-FI</div>
+              <p style="font-size:0.75rem;color:var(--muted);line-height:1.6;">SSIDs : CTX5-PRATICIEN · CTX5-PATIENT · CTX5-VISITEUR</p>
+            </div>
+            <div style="padding:14px;background:rgba(0,229,255,0.03);border:1px solid var(--border);border-radius:3px;">
+              <div style="font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;margin-bottom:6px;">ROUTEUR CISCO RV016</div>
+              <p style="font-size:0.75rem;color:var(--muted);line-height:1.6;">Accès WAN (FAI Orange + FAI SFR) · Liaison avec la DMZ et le proxy pfSense</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="cv-section">
+          <div class="cv-section-title">Services déployés</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--accent);flex-shrink:0;font-size:0.9rem;">▸</span>
+              <div><span style="color:var(--text);font-size:0.8rem;">pfSense + SquidProxy + SquidGuard + Snort</span><span style="font-size:0.75rem;color:var(--muted);"> — Filtrage web, portail captif, détection d'intrusion IDS</span></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--accent);flex-shrink:0;font-size:0.9rem;">▸</span>
+              <div><span style="color:var(--text);font-size:0.8rem;">Active Directory / LDAP / DNS / DHCP</span><span style="font-size:0.75rem;color:var(--muted);"> — Forêt hsp-gdh.fr, domaine ADP, gestion centralisée des utilisateurs</span></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--accent);flex-shrink:0;font-size:0.9rem;">▸</span>
+              <div><span style="color:var(--text);font-size:0.8rem;">GLPI</span><span style="font-size:0.75rem;color:var(--muted);"> — Gestion de parc informatique, ticketing, création d'incidents</span></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--accent);flex-shrink:0;font-size:0.9rem;">▸</span>
+              <div><span style="color:var(--text);font-size:0.8rem;">Zabbix + PRTG</span><span style="font-size:0.75rem;color:var(--muted);"> — Supervision réseau et serveurs en temps réel</span></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--accent);flex-shrink:0;font-size:0.9rem;">▸</span>
+              <div><span style="color:var(--text);font-size:0.8rem;">Veeam Backup</span><span style="font-size:0.75rem;color:var(--muted);"> — Sauvegarde et restauration des machines virtuelles</span></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--accent);flex-shrink:0;font-size:0.9rem;">▸</span>
+              <div><span style="color:var(--text);font-size:0.8rem;">Serveur WEB + MySQL + Messagerie Exchange</span><span style="font-size:0.75rem;color:var(--muted);"> — Hébergés en DMZ (VLAN 51)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Snort -->
+        <div class="cv-section">
+          <div class="cv-section-title">Sécurité — Snort IDS (pfSense 2.4.5)</div>
+          <p style="font-size:0.78rem;color:var(--muted);line-height:1.7;margin-bottom:12px;">Paramétrage de règles sur l'interface WAN pour détecter les pings vers les serveurs internes. Test d'intrusion réalisé avec succès.</p>
+          <div style="background:#0a0a0f;border:1px solid var(--border);border-radius:3px;padding:14px;font-family:var(--font-mono);font-size:0.72rem;color:#00e5ff;">
+            <span style="color:var(--muted);"># Custom WAN Rule — Snort</span><br/>
+            alert icmp $HOME_NET any -&gt; any any<br/>
+            &nbsp;&nbsp;(msg:<span style="color:#7b5ea7;">"ping detected"</span>;sid:999000;)
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="modal-cv">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>📄 Curriculum Vitae</h2>
+        <button class="modal-close" onclick="closeModal('cv')">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- EN-TÊTE CV avec photo -->
+        <div style="display:flex;gap:24px;align-items:flex-start;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+          <img src="data:image/jpeg;base64,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" alt="Jeorge Martins-Voralek" style="width:90px;height:110px;object-fit:cover;object-position:top;border-radius:3px;border:2px solid var(--accent);flex-shrink:0;"/>
+          <div>
+            <div style="font-family:var(--font-head);font-size:1.4rem;font-weight:800;margin-bottom:4px;">Martins-Voralek Jeorge</div>
+            <div style="font-size:0.78rem;color:var(--accent);margin-bottom:12px;letter-spacing:0.08em;">BTS SIO option SISR — 2ème année</div>
+            <div style="font-size:0.75rem;color:var(--muted);line-height:1.8;">
+              📧 <a href="mailto:jeorgemartins0@gmail.com" style="color:var(--accent);text-decoration:none;">jeorgemartins0@gmail.com</a><br/>
+              <!-- Coordonnées privées masquées par défaut -->
+              <span id="private-info" style="display:none;">
+                📞 07 71 12 41 03<br/>
+                📍 1 Place du gros Caillou, 95400 Villiers-le-Bel<br/>
+              </span>
+              <div id="cv-lock-zone">
+                <div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">
+                  <input id="cv-pwd-input" type="password" placeholder="Code d'accès..." style="padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:var(--font-mono);font-size:0.72rem;outline:none;width:140px;" onkeydown="if(event.key==='Enter')unlockCV()"/>
+                  <button onclick="unlockCV()" style="padding:4px 12px;background:rgba(123,94,167,0.15);border:1px solid var(--accent2);border-radius:2px;color:var(--accent2);font-family:var(--font-mono);font-size:0.68rem;cursor:pointer;letter-spacing:0.08em;">🔒 Afficher</button>
+                </div>
+                <div id="cv-pwd-err" style="font-size:0.68rem;color:#ff4d4d;margin-top:4px;display:none;">❌ Code incorrect</div>
+              </div>
+              <br/>🚗 Permis B
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Formation</div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">BTS SIO — option SISR</div>
+            <div class="cv-item-sub">Lycée Robert Schuman — Dugny</div>
+            <div class="cv-item-date">2024 — 2026 (en cours)</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Baccalauréat Professionnel Système Numérique</div>
+            <div class="cv-item-sub">Lycée Robert Schuman — Dugny &nbsp;·&nbsp; <span style="color:var(--accent);">Mention Assez Bien</span></div>
+            <div class="cv-item-date">2021 — 2024</div>
+          </div></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Expériences professionnelles</div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Technicien de maintenance informatique</div>
+            <div class="cv-item-sub">Eryma</div>
+            <div class="cv-item-date">Mai 2022 — Juil. 2022</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Assistant informatique</div>
+            <div class="cv-item-sub">Sigidurs &nbsp;·&nbsp; Gestion utilisateur et groupe, Droit NTFS</div>
+            <div class="cv-item-date">Janv. 2023 — Fév. 2023</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Technicien de maintenance</div>
+            <div class="cv-item-sub">Eryma</div>
+            <div class="cv-item-date">Nov. 2024 — Déc. 2024</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Technicien de maintenance</div>
+            <div class="cv-item-sub">Eryma &nbsp;·&nbsp; Gestion des stocks</div>
+            <div class="cv-item-date">Mai 2025 — Juin 2025</div>
+          </div></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Compétences techniques</div>
+          <div style="margin-bottom:12px;">
+            <div class="cv-item-sub" style="margin-bottom:8px;">Réseau</div>
+            <div class="skills-grid">
+              <span class="skill-pill">Adressage IP</span><span class="skill-pill">Switch Cisco/Netgear</span><span class="skill-pill">Routage InterVLAN</span><span class="skill-pill">OSPF</span><span class="skill-pill">HSRP</span><span class="skill-pill">pfSense</span><span class="skill-pill">GLPI</span><span class="skill-pill">Messagerie</span>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;margin-top:12px;">
+            <div class="cv-item-sub" style="margin-bottom:8px;">Systèmes OS</div>
+            <div class="skills-grid">
+              <span class="skill-pill">Windows 10/11</span><span class="skill-pill">Windows Server 2019/2022</span><span class="skill-pill">Active Directory</span><span class="skill-pill">DNS / DHCP</span><span class="skill-pill">Droits NTFS</span><span class="skill-pill">Base de Registre</span>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;margin-top:12px;">
+            <div class="cv-item-sub" style="margin-bottom:8px;">Linux</div>
+            <div class="skills-grid">
+              <span class="skill-pill">Debian 11/12</span><span class="skill-pill">AD Linux</span><span class="skill-pill">Gestion utilisateurs</span><span class="skill-pill">Habilitations</span>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;margin-top:12px;">
+            <div class="cv-item-sub" style="margin-bottom:8px;">Logiciels & Virtualisation</div>
+            <div class="skills-grid">
+              <span class="skill-pill">Pack Office 365</span><span class="skill-pill">Canva</span><span class="skill-pill">VMware</span><span class="skill-pill">HyperV</span><span class="skill-pill">VoIP Asterisk</span><span class="skill-pill">Téléphonie IP Cisco</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Projets</div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Lecteur de carte NFC — ouverture de session</div>
+            <div class="cv-item-sub">Réalisation d'un lecteur NFC pour ouvrir sa session Windows 10 en badgeant sa carte, accompagné d'un programme Python</div>
+          </div></div>
+          <div class="cv-item"><div class="cv-dot"></div><div>
+            <div class="cv-item-title">Infrastructure réseau virtuelle</div>
+            <div class="cv-item-sub">Réalisation d'une infrastructure réseau virtuel complète</div>
+          </div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="cv-section" style="margin-bottom:0;">
+            <div class="cv-section-title">Langues</div>
+            <div class="cv-item"><div class="cv-dot"></div><div><div class="cv-item-title">Français</div><div class="cv-item-sub">Langue maternelle</div></div></div>
+            <div class="cv-item"><div class="cv-dot"></div><div><div class="cv-item-title">Anglais</div><div class="cv-item-sub">B1</div></div></div>
+            <div class="cv-item"><div class="cv-dot"></div><div><div class="cv-item-title">Allemand</div><div class="cv-item-sub">A1</div></div></div>
+            <div class="cv-item"><div class="cv-dot"></div><div><div class="cv-item-title">Portugais</div><div class="cv-item-sub">B1</div></div></div>
+          </div>
+          <div class="cv-section" style="margin-bottom:0;">
+            <div class="cv-section-title">Savoir-être</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+              <span style="font-size:0.72rem;color:var(--muted);">Autonomie</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Travail d'équipe</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Rigoureux</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Adaptable</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Persévérant</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Dynamique</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Patient</span><span style="color:var(--border);">·</span>
+              <span style="font-size:0.72rem;color:var(--muted);">Polyvalent</span>
+            </div>
+            <div class="cv-section-title" style="margin-top:20px;">Centres d'intérêt</div>
+            <div style="font-size:0.72rem;color:var(--muted);line-height:2;">🎵 Musique &nbsp; 🎮 Jeux vidéo &nbsp; ⚽ Sport &nbsp; 🎨 Arts</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <!-- MODAL VEILLE -->
+  <div class="modal-overlay" id="modal-veille">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>📡 Veille Technologique</h2>
+        <button class="modal-close" onclick="closeModal('veille')">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Intro -->
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:24px;line-height:1.8;">La veille technologique consiste à surveiller en continu les évolutions du secteur IT afin d'anticiper les changements et d'adapter ses compétences. Elle est réalisée dans le cadre du <span style="color:var(--text);">BTS SIO SISR</span>.</p>
+
+        <!-- Outil de veille -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:32px;padding:16px 20px;background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.2);border-radius:3px;">
+          <div style="font-size:1.6rem;">📰</div>
+          <div>
+            <div style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Outil de veille utilisé</div>
+            <div style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;color:var(--text);">Feedly</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">Agrégateur de flux RSS permettant de centraliser et suivre des sources spécialisées en IT, cybersécurité et réseaux en temps réel.</div>
+          </div>
+        </div>
+
+        <!-- Séparateur titre -->
+        <div style="font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--border);">Articles de veille</div>
+
+        <!-- ARTICLE PRINCIPAL — Green IT -->
+        <div style="background:rgba(123,94,167,0.06);border:1px solid rgba(123,94,167,0.25);border-radius:3px;padding:24px;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <span style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:#7b5ea7;border:1px solid #7b5ea7;padding:3px 10px;border-radius:2px;">🌿 Green IT</span>
+            <span style="font-size:0.68rem;color:var(--muted);">2024 — 2025</span>
+          </div>
+          <div style="font-family:var(--font-head);font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.3;">Le Green IT : vers des infrastructures réseau plus durables</div>
+
+          <!-- Sous-sections de l'article -->
+          <div style="display:flex;flex-direction:column;gap:14px;">
+
+            <div>
+              <div style="font-size:0.68rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">📌 Définition</div>
+              <p style="font-size:0.78rem;color:var(--muted);line-height:1.75;">Le <strong style="color:var(--text);">Green IT</strong> (informatique verte) désigne l'ensemble des pratiques visant à réduire l'empreinte environnementale des technologies de l'information. Cela concerne la conception, la fabrication, l'utilisation et le recyclage des équipements informatiques et des infrastructures réseau.</p>
+            </div>
+
+            <div>
+              <div style="font-size:0.68rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">🌍 Pourquoi c'est important</div>
+              <p style="font-size:0.78rem;color:var(--muted);line-height:1.75;">Le secteur numérique représente aujourd'hui environ <strong style="color:var(--text);">4% des émissions mondiales de CO₂</strong>, un chiffre qui devrait doubler d'ici 2025. Les datacenters, les équipements réseau actifs (switches, routeurs) et les câbles sous-marins consomment une quantité massive d'énergie 24h/24.</p>
+            </div>
+
+            <div>
+              <div style="font-size:0.68rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">⚙️ Les solutions pour les infrastructures réseau</div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:0.78rem;color:var(--muted);line-height:1.7;">
+                <div style="display:flex;gap:10px;"><span style="color:var(--accent);flex-shrink:0;">▸</span><span><strong style="color:var(--text);">Virtualisation réseau (NFV/SDN)</strong> — remplacer les équipements physiques par des fonctions logicielles réduit la consommation matérielle.</span></div>
+                <div style="display:flex;gap:10px;"><span style="color:var(--accent);flex-shrink:0;">▸</span><span><strong style="color:var(--text);">Energy Efficient Ethernet (EEE / 802.3az)</strong> — standard permettant aux équipements réseau de passer en mode basse consommation pendant les périodes d'inactivité.</span></div>
+                <div style="display:flex;gap:10px;"><span style="color:var(--accent);flex-shrink:0;">▸</span><span><strong style="color:var(--text);">Datacenters à énergie renouvelable</strong> — de grandes entreprises (Google, Microsoft) s'engagent sur des datacenters alimentés à 100% en énergies renouvelables.</span></div>
+                <div style="display:flex;gap:10px;"><span style="color:var(--accent);flex-shrink:0;">▸</span><span><strong style="color:var(--text);">Allongement de la durée de vie des équipements</strong> — reconditionner et réutiliser les switches, routeurs et serveurs plutôt que de les remplacer systématiquement.</span></div>
+                <div style="display:flex;gap:10px;"><span style="color:var(--accent);flex-shrink:0;">▸</span><span><strong style="color:var(--text);">PUE (Power Usage Effectiveness)</strong> — indicateur clé mesurant l'efficacité énergétique d'un datacenter ; un PUE de 1.0 serait parfait, la moyenne mondiale est ~1.58.</span></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:0.68rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">🔗 Lien avec le BTS SISR</div>
+              <p style="font-size:0.78rem;color:var(--muted);line-height:1.75;">En tant que futur technicien en infrastructure réseau, le Green IT est directement lié à mon domaine : choix d'équipements à faible consommation, mise en place de la virtualisation, configuration de VLANs pour segmenter et optimiser le trafic, et sensibilisation aux bonnes pratiques énergétiques en entreprise.</p>
+            </div>
+
+            <div>
+              <div style="font-size:0.68rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">📚 Sources consultées via Feedly</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+                <span style="padding:3px 10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:2px;font-size:0.7rem;color:var(--accent);">LeMagIT</span>
+                <span style="padding:3px 10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:2px;font-size:0.7rem;color:var(--accent);">ZDNet France</span>
+                <span style="padding:3px 10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:2px;font-size:0.7rem;color:var(--accent);">GreenIT.fr</span>
+                <span style="padding:3px 10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:2px;font-size:0.7rem;color:var(--accent);">IEEE Spectrum</span>
+                <span style="padding:3px 10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:2px;font-size:0.7rem;color:var(--accent);">ADEME</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Conclusion -->
+        <div style="padding:14px 18px;background:rgba(0,229,255,0.04);border-left:3px solid var(--accent);border-radius:0 3px 3px 0;font-size:0.78rem;color:var(--muted);line-height:1.7;">
+          <strong style="color:var(--text);">Conclusion :</strong> Le Green IT n'est plus une option mais une nécessité. Les professionnels IT, et notamment les administrateurs réseau, ont un rôle clé à jouer pour concevoir des infrastructures performantes tout en limitant leur impact environnemental.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(id) { document.getElementById('modal-'+id).classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); document.body.style.overflow=''; }
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', function(e) { if(e.target===this){this.classList.remove('open');document.body.style.overflow='';} });
+    });
+    document.addEventListener('keydown', e => {
+      if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>{m.classList.remove('open');document.body.style.overflow='';});
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry,i) => { if(entry.isIntersecting) setTimeout(()=>entry.target.classList.add('visible'),i*80); });
+    }, {threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+    function sendMsg() {
+      document.getElementById('form-msg').style.display='block';
+    }
+
+    // Déverrouillage CV coords privées — mot de passe : 2703
+    function unlockCV() {
+      const pwd = document.getElementById('cv-pwd-input').value;
+      if (pwd === '2703') {
+        document.getElementById('private-info').style.display = 'block';
+        document.getElementById('cv-lock-zone').style.display = 'none';
+      } else {
+        document.getElementById('cv-pwd-err').style.display = 'block';
+        document.getElementById('cv-pwd-input').style.borderColor = '#ff4d4d';
+        setTimeout(() => { document.getElementById('cv-pwd-input').style.borderColor = 'var(--border)'; }, 1500);
+      }
+    }
+    function unlockHSP() {
+      const pwd = document.getElementById('hsp-pwd-input').value;
+      if (pwd === '2703') {
+        document.getElementById('hsp-lock').style.display = 'none';
+        document.getElementById('hsp-servers').style.display = 'block';
+        document.getElementById('hsp-pwd-err').style.display = 'none';
+      } else {
+        document.getElementById('hsp-pwd-err').style.display = 'block';
+        document.getElementById('hsp-pwd-input').style.borderColor = '#ff4d4d';
+        setTimeout(() => { document.getElementById('hsp-pwd-input').style.borderColor = 'var(--border)'; }, 1500);
+      }
+    }
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if(window.scrollY >= s.offsetTop - 120) current = s.id; });
+      navLinks.forEach(a => {
+        a.classList.remove('active');
+        if(a.getAttribute('href') === '#'+current) a.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
